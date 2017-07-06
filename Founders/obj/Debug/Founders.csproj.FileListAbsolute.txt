@@ -1,0 +1,8 @@
+W:\Code\C# Windows\Founders\Founders\obj\Debug\Founders.csprojResolveAssemblyReference.cache
+W:\Code\C# Windows\Founders\Founders\bin\Debug\Founders.exe.config
+W:\Code\C# Windows\Founders\Founders\bin\Debug\Founders.exe
+W:\Code\C# Windows\Founders\Founders\bin\Debug\Founders.pdb
+W:\Code\C# Windows\Founders\Founders\bin\Debug\Newtonsoft.Json.dll
+W:\Code\C# Windows\Founders\Founders\bin\Debug\Newtonsoft.Json.xml
+W:\Code\C# Windows\Founders\Founders\obj\Debug\Founders.exe
+W:\Code\C# Windows\Founders\Founders\obj\Debug\Founders.pdb
