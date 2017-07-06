@@ -129,32 +129,33 @@ namespace Founders
                     //  Console.WriteLine("Fracked Coin: ");
                     cu.consoleReport();
 
-                    CloudCoin fixedCC = fixCoin(frackedCC); // Will attempt to unfrack the coin. 
+                    CoinUtils fixedCC = fixCoin(frackedCC); // Will attempt to unfrack the coin. 
 
                     cu.consoleReport();
-                    switch ( cu.getFolder().ToLower() )
+                    switch (fixedCC.getFolder().ToLower() )
                     {
                         case "bank":
                             this.totalValueToBank++;
-                            this.fileUtils.overWrite(this.fileUtils.bankFolder, fixedCC);
+                            this.fileUtils.overWrite(this.fileUtils.bankFolder, fixedCC.cc);
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
                             Console.WriteLine("CloudCoin was moved to Bank.");
                             break;
                         case "counterfeit":
                             this.totalValueToCounterfeit++;
-                            this.fileUtils.overWrite(this.fileUtils.counterfeitFolder, fixedCC);
+                            this.fileUtils.overWrite(this.fileUtils.counterfeitFolder, fixedCC.cc);
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
                             Console.WriteLine("CloudCoin was moved to Trash.");
                             break;
                         default://Move back to fracked folder
                             this.totalValueToFractured++;
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
-                            this.fileUtils.overWrite(this.fileUtils.frackedFolder, fixedCC);
+                            this.fileUtils.overWrite(this.fileUtils.frackedFolder, fixedCC.cc);
                             Console.WriteLine("CloudCoin was moved back to Fraked folder.");
                             break;
                     }
                     // end switch on the place the coin will go 
-
+                    Console.WriteLine("...................................");
+                    Console.WriteLine("");
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -194,7 +195,7 @@ namespace Founders
         }//end delete coin
 
 
-        public CloudCoin fixCoin(CloudCoin brokeCoin)
+        public CoinUtils fixCoin(CloudCoin brokeCoin)
         {
             CoinUtils cu = new CoinUtils(brokeCoin);
 
@@ -256,11 +257,11 @@ namespace Founders
             Console.WriteLine("Time spent fixing RAIDA in milliseconds: " + ts.Milliseconds);
 
             cu.calculateHP();//how many fails did it get
-            cu.gradeCoin();
-            // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
-            cu.calcExpirationDate();
+          //  cu.gradeCoin();// sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
+            
             cu.grade();
-            return brokeCoin;
+            cu.calcExpirationDate();
+            return cu;
         }// end fix coin
 
     }//end class

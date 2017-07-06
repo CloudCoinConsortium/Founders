@@ -33,6 +33,7 @@ namespace Founders
         {
             DetectionAgent da = new DetectionAgent(raida_id, 2000);
             responseArray[raida_id] = da.echo(raida_id);
+            Console.Write(".");
         }//end echo 
 
 
@@ -133,7 +134,7 @@ namespace Founders
 
             cu.setAnsToPansIfPassed();
             cu.calculateHP();
-            cu.gradeCoin(); // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
+           // cu.gradeCoin(); // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
             cu.calcExpirationDate();
             cu.grade();
          

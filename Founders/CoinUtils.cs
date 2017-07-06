@@ -146,7 +146,7 @@ namespace Founders
                 }
             }
         }//end calculate hp
-
+/*
         public String gradeCoin()
         {
             int passed = 0;
@@ -273,7 +273,7 @@ namespace Founders
             // end RAIDA other errors and unknowns
             return "\n " + passedDesc + " said Passed. " + "\n " + failedDesc + " said Failed. \n RAIDA Status: " + otherDesc;
         }// end grade coin
-
+*/
         public void calcExpirationDate()
         {
             DateTime expirationDate = DateTime.Today.AddYears(YEARSTILEXPIRE);
@@ -399,7 +399,7 @@ namespace Founders
                     break;
                 case 1:
                 case 2:
-                    otherDesc = "Four or less RAIDA errors";
+                    otherDesc = "Two or less RAIDA errors";
                     break;
                 case 3:
                 case 4:
@@ -459,9 +459,9 @@ namespace Founders
                 folder = Folder.Bank;
             }
 
-            this.gradeStatus[0] = passedDesc;
-            this.gradeStatus[1] = failedDesc;
-            this.gradeStatus[2] = otherDesc;
+            gradeStatus[0] = passedDesc;
+            gradeStatus[1] = failedDesc;
+            gradeStatus[2] = otherDesc;
             return this.gradeStatus;
         }// end gradeStatus
 
