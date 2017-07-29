@@ -218,7 +218,7 @@ namespace Founders
             {
                 //  Console.WriteLine("Past Status for " + raida_ID + ", " + brokeCoin.pastStatus[raida_ID]);
 
-                if ( cu.getPastStatus(raida_ID).ToLower() == "fail")
+                if ( cu.getPastStatus(raida_ID).ToLower() != "pass")//will try to fix everything that is not perfect pass.
                 {
 
                     Console.ForegroundColor = ConsoleColor.Cyan;

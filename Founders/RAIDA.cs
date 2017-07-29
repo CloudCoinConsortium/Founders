@@ -9,7 +9,7 @@ namespace Founders
     {
         /* INSTANCE VARIABLE */
         public DetectionAgent[] agent;
-        public CloudCoin returnCoin;
+        //public CloudCoin returnCoin;
         public Response[] responseArray = new Response[25];
         private int[] working_triad = { 0, 1, 2 };//place holder
         public bool[] raidaIsDetecting = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };

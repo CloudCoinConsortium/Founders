@@ -35,11 +35,21 @@ namespace Founders
             Response echoResponse = new Response();
             echoResponse.fullRequest = this.fullUrl + "echo?b=t";
             DateTime before = DateTime.Now;
+            RAIDA_Status.failsEcho[raidaID] = true;
             try
             {
                 echoResponse.fullResponse = getHtml(echoResponse.fullRequest);
-                if (echoResponse.fullResponse.Contains("ready")) { echoResponse.success = true; echoResponse.outcome = "ready"; }
-                else { echoResponse.success = false; echoResponse.outcome = "error"; RAIDA_Status.failsEcho[raidaID] = true; }
+                if ( echoResponse.fullResponse.Contains("ready") )
+                {
+                    echoResponse.success = true;
+                    echoResponse.outcome = "ready";
+                    RAIDA_Status.failsEcho[raidaID] = false;
+                }
+                else
+                {
+                    echoResponse.success = false;
+                    echoResponse.outcome = "error";
+                    RAIDA_Status.failsEcho[raidaID] = true; }
             }
             catch (Exception ex)
             {
@@ -51,6 +61,7 @@ namespace Founders
             DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
             echoResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
             RAIDA_Status.echoTime[raidaID] = Convert.ToInt32(ts.Milliseconds);
+            //Console.WriteLine("RAIDA # " + raidaID + RAIDA_Status.failsEcho[raidaID]);
             return echoResponse;
         }//end detect
 

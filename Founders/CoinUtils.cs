@@ -504,19 +504,19 @@ namespace Founders
 
             Console.Out.WriteLine("");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Out.WriteLine("╔══════════════════════════════════════════════════════╗");
-            Console.Out.WriteLine("║  Authenticity Report SN #" + string.Format("{0,8}", cc.sn) + ", Denomination: " + string.Format("{0,3}", this.getDenomination()) + " ║");
-            Console.Out.WriteLine("╠══════════╦══════════╦══════════╦══════════╦══════════╣");
-            Console.Out.Write("║   "); a(pownArray[0]); Console.Out.Write("   ║   "); a(pownArray[1]); Console.Out.Write("   ║   "); a(pownArray[2]); Console.Out.Write("   ║   "); a(pownArray[3]); Console.Out.Write("   ║   "); a(pownArray[4]); Console.Out.WriteLine("   ║");
-            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╣");
-            Console.Out.Write("║   "); a(pownArray[5]); Console.Out.Write("   ║   "); a(pownArray[6]); Console.Out.Write("   ║   "); a(pownArray[7]); Console.Out.Write("   ║   "); a(pownArray[8]); Console.Out.Write("   ║   "); a(pownArray[9]); Console.Out.WriteLine("   ║");
-            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╣");
-            Console.Out.Write("║   "); a(pownArray[10]); Console.Out.Write("   ║   "); a(pownArray[11]); Console.Out.Write("   ║   "); a(pownArray[12]); Console.Out.Write("   ║   "); a(pownArray[13]); Console.Out.Write("   ║   "); a(pownArray[14]); Console.Out.WriteLine("   ║");
-            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╣");
-            Console.Out.Write("║   "); a(pownArray[15]); Console.Out.Write("   ║   "); a(pownArray[16]); Console.Out.Write("   ║   "); a(pownArray[17]); Console.Out.Write("   ║   "); a(pownArray[18]); Console.Out.Write("   ║   "); a(pownArray[19]); Console.Out.WriteLine("   ║");
-            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╣");
-            Console.Out.Write("║   "); a(pownArray[20]); Console.Out.Write("   ║   "); a(pownArray[21]); Console.Out.Write("   ║   "); a(pownArray[22]); Console.Out.Write("   ║   "); a(pownArray[23]); Console.Out.Write("   ║   "); a(pownArray[24]); Console.Out.WriteLine("   ║");
-            Console.Out.WriteLine("╚══════════╩══════════╩══════════╩══════════╩══════════╝");
+            Console.Out.WriteLine("                                                        ");
+            Console.Out.WriteLine("   Authenticity Report SN #" + string.Format("{0,8}", cc.sn) + ", Denomination: " + string.Format("{0,3}", this.getDenomination()) + "  ");
+            Console.Out.WriteLine("                                                        ");
+            Console.Out.Write("    "); a(pownArray[0]); Console.Out.Write("       "); a(pownArray[1]); Console.Out.Write("       "); a(pownArray[2]); Console.Out.Write("       "); a(pownArray[3]); Console.Out.Write("       "); a(pownArray[4]); Console.Out.WriteLine("    ");
+            Console.Out.WriteLine("                                                        ");
+            Console.Out.Write("    "); a(pownArray[5]); Console.Out.Write("       "); a(pownArray[6]); Console.Out.Write("       "); a(pownArray[7]); Console.Out.Write("       "); a(pownArray[8]); Console.Out.Write("       "); a(pownArray[9]); Console.Out.WriteLine("    ");
+            Console.Out.WriteLine("                                                        ");
+            Console.Out.Write("    "); a(pownArray[10]); Console.Out.Write("       "); a(pownArray[11]); Console.Out.Write("       "); a(pownArray[12]); Console.Out.Write("       "); a(pownArray[13]); Console.Out.Write("       "); a(pownArray[14]); Console.Out.WriteLine("    ");
+            Console.Out.WriteLine("                                                        ");
+            Console.Out.Write("    "); a(pownArray[15]); Console.Out.Write("       "); a(pownArray[16]); Console.Out.Write("       "); a(pownArray[17]); Console.Out.Write("       "); a(pownArray[18]); Console.Out.Write("       "); a(pownArray[19]); Console.Out.WriteLine("    ");
+            Console.Out.WriteLine("                                                ");
+            Console.Out.Write("    "); a(pownArray[20]); Console.Out.Write("       "); a(pownArray[21]); Console.Out.Write("       "); a(pownArray[22]); Console.Out.Write("       "); a(pownArray[23]); Console.Out.Write("       "); a(pownArray[24]); Console.Out.WriteLine("    ");
+            Console.Out.WriteLine("                                                        ");
             Console.Out.WriteLine("");
             Console.ForegroundColor = ConsoleColor.White;
 

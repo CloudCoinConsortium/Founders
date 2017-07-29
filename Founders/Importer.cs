@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Founders
 {
@@ -180,17 +181,30 @@ namespace Founders
             {
                 String incomeJson = fileUtils.importJSON(this.fileUtils.importFolder + fileName);//Load file as JSON .stack or .chest
                 Stack tempCoins = null;
-                //  if (!seemsValidJSON(incomeJson))
-                //  {
-                tempCoins = this.fileUtils.loadManyCloudCoinFromJsonFile(this.fileUtils.importFolder + fileName, incomeJson);
-                //  }
+                if ( seemsValidJSON(incomeJson) )
+                {
+                    try
+                    {
+                        tempCoins = this.fileUtils.loadManyCloudCoinFromJsonFile(this.fileUtils.importFolder + fileName, incomeJson);
+                    }
+                    catch (JsonReaderException e) {
+                        //Console.WriteLine("Moving corrupted file to trash: " + fileName);
+                        Console.WriteLine("Error reading " + fileName + ". Moving to trash.");
+                        Console.WriteLine(e);
+                        moveFile(this.fileUtils.importFolder + fileName, this.fileUtils.trashFolder + fileName);
+                    }//end catch json error
+                }
+                else {
+                    //Console.WriteLine("Moving corrupted file to trash: " + fileName);
+                    moveFile(this.fileUtils.importFolder + fileName, this.fileUtils.trashFolder + fileName);
+                }
 
                 if (tempCoins == null)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Out.WriteLine("The following file does not appear to be valid JSON. It will be moved to the Trash Folder: ");
+                    Console.Out.WriteLine("  The following file does not appear to be valid JSON. It will be moved to the Trash Folder: ");
                     Console.Out.WriteLine(fileName);
-                    Console.Out.WriteLine("Paste the text into http://jsonlint.com/ to check for validity.");
+                    Console.Out.WriteLine("  Paste the text into http://jsonlint.com/ to check for validity.");
                     Console.ForegroundColor = ConsoleColor.White;
                     return false;//CloudCoin was null so move to trash
                 }
@@ -240,13 +254,6 @@ namespace Founders
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Out.WriteLine("The stack file did not have a matching number of double quotations");
-                Console.ForegroundColor = ConsoleColor.White;
-                return false;
-            }//Check if number of
-            if (IsNotFive(json.Count(f => f == ':') - 1))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Out.WriteLine("The stack file did not have a the right number of full colons :");
                 Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }//Check if number of
@@ -311,6 +318,35 @@ namespace Founders
             return cc;
         }// end parse Jpeg
 
+        public void moveFile (string fromPath, string tooPath )
+        {
+            string path = fromPath;
+            string path2 = tooPath;
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    // This statement ensures that the file is created,
+                    // but the handle is not kept.
+                    using (FileStream fs = File.Create(path)) { }
+                }
+
+                // Ensure that the target does not exist.
+                if (File.Exists(path2))
+                    File.Delete(path2);
+
+                // Move the file.
+                File.Move(path, path2);
+                //Console.WriteLine("{0} was moved to {1}.", path, path2);
+
+   
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+            }
+        }
 
     }//end class
 }//end namespace

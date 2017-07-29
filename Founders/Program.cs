@@ -107,14 +107,14 @@ namespace Founders
         {
             Console.BackgroundColor = ConsoleColor.Blue;
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Out.WriteLine("╔══════════════════════════════════════════════════════════════════╗");
-            Console.Out.WriteLine("║                   CloudCoin Founders Edition                     ║");                   
-            Console.Out.WriteLine("║                      Version: July.5.2017                        ║");        
-            Console.Out.WriteLine("║          Used to Authenticate, Store and Payout CloudCoins       ║");
-            Console.Out.WriteLine("║      This Software is provided as is with all faults, defects    ║");
-            Console.Out.WriteLine("║          and errors, and without warranty of any kind.           ║");
-            Console.Out.WriteLine("║                Free from the CloudCoin Consortium.               ║");
-            Console.Out.WriteLine("╚══════════════════════════════════════════════════════════════════╝");
+            Console.Out.WriteLine("                                                                  ");
+            Console.Out.WriteLine("                   CloudCoin Founders Edition                     ");                   
+            Console.Out.WriteLine("                      Version: July.18.2017                       ");        
+            Console.Out.WriteLine("          Used to Authenticate, Store and Payout CloudCoins       ");
+            Console.Out.WriteLine("      This Software is provided as is with all faults, defects    ");
+            Console.Out.WriteLine("          and errors, and without warranty of any kind.           ");
+            Console.Out.WriteLine("                Free from the CloudCoin Consortium.               ");
+            Console.Out.WriteLine("                                                                  ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Out.Write("  Checking RAIDA");
@@ -141,17 +141,17 @@ namespace Founders
                 {
                     strPad += " ";
                 }//end for padding
-
-                if (!RAIDA_Status.failsEcho[i])
+               // Console.Out.Write(RAIDA_Status.failsEcho[i]);
+                if ( RAIDA_Status.failsEcho[i] )
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Out.Write(strPad + countries[i] );
-                    totalReady++;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Out.Write(strPad + countries[i]);
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Out.Write( strPad + countries[i] );
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Out.Write(strPad + countries[i]);
+                    totalReady++;
                 }
                 if (i == 4 || i == 9 || i == 14 || i == 19) { Console.WriteLine(); }
             }//end for
@@ -191,15 +191,15 @@ namespace Founders
              //Output  " 12.3"
              Console.ForegroundColor = ConsoleColor.Yellow;
             Console.BackgroundColor = ConsoleColor.Blue;
-             Console.Out.WriteLine(" ╔═════════════════════════════════════════════════════════════════╗");
-             Console.Out.WriteLine(" ║  Total Coins in Bank:    " + string.Format("{0,8:N0}", (bankTotals[0] + frackedTotals[0])) + "                               ║");
-             Console.Out.WriteLine(" ╠══════════╦══════════╦══════════╦══════════╦══════════╦══════════╣");
-             Console.Out.WriteLine(" ║          ║    1s    ║    5s    ║    25s   ║   100s   ║   250s   ║");
-             Console.Out.WriteLine(" ╠══════════╬══════════╬══════════╬══════════╬══════════╬══════════╣");
-             Console.Out.WriteLine(" ║ Perfect: ║ " + string.Format("{0,7}", bankTotals[1]) + "  ║ " + string.Format("{0,7}", bankTotals[2]) + "  ║ " + string.Format("{0,7}", bankTotals[3]) + "  ║ " + string.Format("{0,7}", bankTotals[4]) + "  ║ " + string.Format("{0,7}", bankTotals[5]) + "  ║");
-             Console.Out.WriteLine(" ╠══════════╬══════════╬══════════╬══════════╬══════════╬══════════╣");
-             Console.Out.WriteLine(" ║ Fracked: ║ " + string.Format("{0,7}", frackedTotals[1]) + "  ║ " + string.Format("{0,7}", frackedTotals[2]) + "  ║ " + string.Format("{0,7}", frackedTotals[3]) + "  ║ " + string.Format("{0,7}", frackedTotals[4]) + "  ║ " + string.Format("{0,7}", frackedTotals[5]) + "  ║");
-             Console.Out.WriteLine(" ╚══════════╩══════════╩══════════╩══════════╩══════════╩══════════╝");
+             Console.Out.WriteLine("                                                                    ");
+             Console.Out.WriteLine("    Total Coins in Bank:    " + string.Format("{0,8:N0}", (bankTotals[0] + frackedTotals[0])) + "                                ");
+             Console.Out.WriteLine("                                                                    ");
+             Console.Out.WriteLine("                 1s         5s         25s       100s       250s    ");
+             Console.Out.WriteLine("                                                                    ");
+             Console.Out.WriteLine("   Perfect:   " + string.Format("{0,7}", bankTotals[1]) + "    " + string.Format("{0,7}", bankTotals[2]) + "    " + string.Format("{0,7}", bankTotals[3]) + "    " + string.Format("{0,7}", bankTotals[4]) + "    " + string.Format("{0,7}", bankTotals[5]) + "   ");
+             Console.Out.WriteLine("                                                                    ");
+             Console.Out.WriteLine("   Fracked:   " + string.Format("{0,7}", frackedTotals[1]) + "    " + string.Format("{0,7}", frackedTotals[2]) + "    " + string.Format("{0,7}", frackedTotals[3]) + "    " + string.Format("{0,7}", frackedTotals[4]) + "    " + string.Format("{0,7}", frackedTotals[5]) + "   ");
+             Console.Out.WriteLine("                                                                    ");
              Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
 

@@ -5,6 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace Founders
 {
@@ -41,106 +42,13 @@ namespace Founders
         }  // End constructor
 
         /* PUBLIC METHODS */
-        /* This loads a JSON file (.stack) from the hard drive that contains only one CloudCoin and turns it into an object.  */
-
-        /*  This has a bug that does not parse json unless it is in a specific order.    
-        public CloudCoin loadOneCloudCoinFromJsonFile(String loadFilePath)
-        {
-
-  
-
-
-
-            CloudCoin coins = JsonConvert.DeserializeObject<CloudCoin>(json);
-
-            Console.WriteLine("sn is " + coins.sn);
-            Console.WriteLine("nn is " + coins.nn);
-            Console.WriteLine("an is " + coins.an);
-            Console.WriteLine("ex is " + coins.ed);
-            Console.WriteLine("pown is " + coins.pown);
-            Console.WriteLine("aoid is " + coins.aoid);
-
-            CloudCoin returnCoin = new CloudCoin();
-            returnCoin.sn = coins.sn;
-            returnCoin.nn = coins.nn;
-            returnCoin.an = coins.an;
-            returnCoin.ed = coins.ed;
-            returnCoin.pown = coins.pown;
-            returnCoin.aoid = coins.aoid;
-
-
-            // Bad Boys
-
-            /*
-                    //Load file as JSON
-                    String incomeJson = this.importJSON(loadFilePath);
-
-                    //STRIP UNESSARY test
-                    int secondCurlyBracket = ordinalIndexOf(incomeJson, "{", 2) - 1;
-                    int firstCloseCurlyBracket = ordinalIndexOf(incomeJson, "}", 0);
-                    // incomeJson = incomeJson.Substring(secondCurlyBracket, firstCloseCurlyBracket);
-                    incomeJson = incomeJson.Substring(secondCurlyBracket, firstCloseCurlyBracket - secondCurlyBracket + 1);
-                    // Console.Out.WriteLine(incomeJson);
-
-                    String[] jsonArray = incomeJson.Split('"');
-
-                    int nn = Convert.ToInt32(jsonArray[3]);
-                    int sn = Convert.ToInt32(jsonArray[7]);
-                    String[] ans = new String[25];
-                    int count = 0;
-                    for (int i = 11; i < 60; i = i + 2)
-                    {
-                        ans[count] = jsonArray[i];
-                        count++;
-                    }
-
-                    String ed = jsonArray[63];
-                    Dictionary<string, string> aoid_dictionary = new Dictionary<string, string>();
-                    aoid_dictionary.Add("memo", "");
-                    String frackedCodes ="";
-                    // Console.Out.WriteLine(jsonArray.Length);
-                    if (incomeJson.Contains("fracked"))//If there is an fracked note that explains the status "fracked=ppppppppfppppppppppppppp"
-                    {
-                        if (incomeJson.Contains("fracked\""))
-                        {
-                            frackedCodes = incomeJson.Substring(incomeJson.IndexOf("fracked") + 10, 25);//fixes bug where we used impropver json, can be deleted later
-                        }
-                        else {
-                            frackedCodes = incomeJson.Substring(incomeJson.IndexOf("fracked") + 8, 25);
-                        }
-
-                       // Console.WriteLine(frackedCodes);
-                        aoid_dictionary.Add("fracked", frackedCodes);
-                    }
-
-                    CloudCoin returnCC = new CloudCoin(nn, sn, ans, ed, aoid_dictionary, pown, "suspect");
-                    
-            return returnCoin;
-        }//end load one CloudCoin from JSON
-
-/*
-        private CoinStack ReadJson(Stream jsonFS)
-        {
-            jsonFS.Position = 0;
-            StreamReader sr = new StreamReader(jsonFS);
-            CoinStack stack = null;
-            try
-            {
-                stack = JsonConvert.DeserializeObject<CoinStack>(sr.ReadToEnd());
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-            return stack;
-        }
-
-        */
+ 
         // This loads a JSON file (.stack) from the hard drive that contains only one CloudCoin and turns it into an object. 
         //   This uses Newton soft but causes a enrror System.IO.FileNotFoundException. Could not load file 'Newtonsoft.Json'  
         public CloudCoin loadOneCloudCoinFromJsonFile(String loadFilePath)
         {
+
+            CloudCoin returnCC = new CloudCoin();
 
             //Load file as JSON
             String incomeJson = this.importJSON(loadFilePath);
@@ -151,7 +59,46 @@ namespace Founders
             incomeJson = incomeJson.Substring(secondCurlyBracket, firstCloseCurlyBracket + 1);
             // Console.Out.WriteLine(incomeJson);
             //Deserial JSON
-            CloudCoin returnCC = JsonConvert.DeserializeObject<CloudCoin>(incomeJson);
+
+            try
+            {
+                 returnCC = JsonConvert.DeserializeObject<CloudCoin>(incomeJson);
+
+            }
+            catch (JsonReaderException)
+            {
+                Console.WriteLine("There was an error reading files in your bank.");
+                Console.WriteLine("You may have the aoid memo bug that uses too many double quote marks.");
+                Console.WriteLine("Your bank files are stored using and older version that did not use properly formed JSON.");
+                Console.WriteLine("Would you like to upgrade these files to the newer standard?");
+                Console.WriteLine("Your files will be edited.");
+                Console.WriteLine("1 for yes, 2 for no.");
+                KeyboardReader reader = new KeyboardReader();
+                int answer = reader.readInt(1, 2);
+                if (answer == 1) {
+                    //Get rid of ed and aoid
+                    //Get file names in bank folder
+                    String[] fileNames = new DirectoryInfo( bankFolder ).GetFiles().Select(o => o.Name).ToArray();
+                    for (int i = 0; i < fileNames.Length; i++ )
+                    {
+                        Console.WriteLine("Fixing " + bankFolder +"\\"+ fileNames[i]);
+                    string text = File.ReadAllText( bankFolder + "\\" + fileNames[i] );
+                    text = text.Replace("\"aoid\": [\"memo\"=\"\"]", "");
+                    File.WriteAllText( bankFolder + "\\" + fileNames[i], text);
+
+                    }//End for all files in bank
+                    Console.WriteLine("Done Fixing. The program will now exit. Please restart. Press any key.");
+                    Console.Read();
+                    Environment.Exit(0);
+                } else {
+                    Console.WriteLine("Leaving files as is. You maybe able to fix the manually by editing the files.");
+                    Console.WriteLine("Done Fixing. The program will now exit. Please restart. Press any key.");
+                    Console.Read();
+                    Environment.Exit(0);
+                }
+
+
+            }
 
             return returnCC;
         }//end load one CloudCoin from JSON
@@ -159,7 +106,10 @@ namespace Founders
  
         public Stack loadManyCloudCoinFromJsonFile(String loadFilePath, string incomeJson)
         {
-            Stack returnCC = JsonConvert.DeserializeObject<Stack>(incomeJson);
+            
+                Stack returnCC = JsonConvert.DeserializeObject<Stack>(incomeJson);
+           
+
             return returnCC;
         }//end load one CloudCoin from JSON
 
