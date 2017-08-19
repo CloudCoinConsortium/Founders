@@ -25,7 +25,7 @@ namespace Founders
         public static String exportFolder = rootFolder + "Export" + Path.DirectorySeparatorChar;
         public static String languageFolder = rootFolder + "Language" + Path.DirectorySeparatorChar;
         public static String prompt = "> ";
-        public static String[] commandsAvailable = new String[] { "echo raida", "show coins", "import", "export", "fix fracked", "show folders", "export for sales", "quit" };
+        public static String[] commandsAvailable = new String[] { "echo raida", "show coins", "import", "export", "fix fracked", "show folders", "export stack files with one note each", "quit" };
         public static string[] countries = new String[] { "Australia", "Macedonia", "Philippines", "Serbia", "Bulgaria", "Russia", "Switzerland", "United Kingdom", "Punjab", "India", "Croatia", "USA", "India", "Taiwan", "Moscow", "St.Petersburg", "Columbia", "Singapore", "Germany", "Canada", "Venezuela", "Hyperbad", "USA", "Ukraine", "Luxenburg" };
 
         //{ "echo raida", "show coins", "import", "export", "fix fracked", "show folders", "export for sales", "quit" };
@@ -109,7 +109,7 @@ namespace Founders
             Console.ForegroundColor = ConsoleColor.White;
             Console.Out.WriteLine("                                                                  ");
             Console.Out.WriteLine("                   CloudCoin Founders Edition                     ");                   
-            Console.Out.WriteLine("                      Version: July.18.2017                       ");        
+            Console.Out.WriteLine("                      Version: July.31.2017                       ");        
             Console.Out.WriteLine("          Used to Authenticate, Store and Payout CloudCoins       ");
             Console.Out.WriteLine("      This Software is provided as is with all faults, defects    ");
             Console.Out.WriteLine("          and errors, and without warranty of any kind.           ");
@@ -119,6 +119,16 @@ namespace Founders
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Out.Write("  Checking RAIDA");
             echoRaida();
+            //Check to see if suspect files need to be imported because they failed to finish last time. 
+            String[] suspectFileNames = new DirectoryInfo(suspectFolder).GetFiles().Select(o => o.Name).ToArray();//Get all files in suspect folder
+            if (suspectFileNames.Length > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Out.WriteLine("  Finishing importing coins from last time...");//
+                Console.ForegroundColor = ConsoleColor.White;
+                detect();
+            } //end if there are files in the suspect folder that need to be imported
+
         } // End print welcome
 
 
@@ -164,9 +174,9 @@ namespace Founders
             if (totalReady < 16)//
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Out.Write("  Not enough RAIDA servers can be contacted to import new coins.");// );
-                Console.Out.Write("  Is your device connected to the Internet?");// );
-                Console.Out.Write("  Is a router blocking your connection?");// );
+                Console.Out.WriteLine("  Not enough RAIDA servers can be contacted to import new coins.");// );
+                Console.Out.WriteLine("  Is your device connected to the Internet?");// );
+                Console.Out.WriteLine("  Is a router blocking your connection?");// );
                 Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }
@@ -220,10 +230,30 @@ namespace Founders
                        Console.Out.WriteLine(" Your Export folder is:" + "\n  " + exportFolder);
                    } // end show folders
                      
-                               public static void import()
+          public static void import()
                                {
-                                   //CHECK TO SEE IF THERE ARE UN DETECTED COINS IN THE SUSPECT FOLDER
-                                   String[] suspectFileNames = new DirectoryInfo(suspectFolder).GetFiles().Select(o => o.Name).ToArray();//Get all files in suspect folder
+
+            //Check RAIDA Status
+            int totalRAIDABad = 0;
+            for(int i = 0; i < 25; i++){
+                if (RAIDA_Status.failsEcho[i])
+                {
+                    totalRAIDABad += 1;
+                }
+            }
+            if (totalRAIDABad > 8 )
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                 Console.Out.WriteLine("You do not have enought RAIDA to perform an import operation.");
+                Console.Out.WriteLine("Check to make sure your internet is working.");
+                Console.Out.WriteLine("Make sure no routers at your work are blocking access to the RAIDA.");
+                Console.Out.WriteLine("Try to Echo RAIDA and see if the status has changed.");
+                Console.ForegroundColor = ConsoleColor.White;
+                return;
+            }
+
+            //CHECK TO SEE IF THERE ARE UN DETECTED COINS IN THE SUSPECT FOLDER
+            String[] suspectFileNames = new DirectoryInfo(suspectFolder).GetFiles().Select(o => o.Name).ToArray();//Get all files in suspect folder
                                    if (suspectFileNames.Length > 0)
                                    {
                                        Console.ForegroundColor = ConsoleColor.Green;
@@ -358,6 +388,15 @@ namespace Founders
                      int exp_25 = 0;
                      int exp_100 = 0;
                      int exp_250 = 0;
+            //Warn if too many coins
+            Console.WriteLine( bankTotals[1] + frackedTotals[1] + bankTotals[2] + frackedTotals[2] + bankTotals[3] + frackedTotals[3] + bankTotals[4] + frackedTotals[4] + bankTotals[5] + frackedTotals[5]);
+            if (((bankTotals[1] + frackedTotals[1])+ (bankTotals[2] + frackedTotals[2])+ (bankTotals[3] + frackedTotals[3]) + (bankTotals[4] + frackedTotals[4])+ (bankTotals[5] + frackedTotals[5])) > 1000) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Out.WriteLine("Warning: You have more than 1000 Notes in your bank. Stack files should not have more than 1000 Notes in them.");
+                Console.Out.WriteLine("Do not export stack files with more than 1000 notes. .");
+                Console.ForegroundColor = ConsoleColor.White;
+            }//end if they have more than 1000 coins
+
                      Console.Out.WriteLine("  Do you want to export your CloudCoin to (1)jpgs or (2) stack (JSON) file?");
                      int file_type = reader.readInt(1, 2);
                      // 1 jpg 2 stack
@@ -421,7 +460,27 @@ namespace Founders
       
                  public static void fix()
                  {
-                     Console.Out.WriteLine("  Fixing fracked coins can take many minutes.");
+            //Check RAIDA Status
+            int totalRAIDABad = 0;
+            for (int i = 0; i < 25; i++)
+            {
+                if (RAIDA_Status.failsEcho[i])
+                {
+                    totalRAIDABad += 1;
+                }
+            }
+            if (totalRAIDABad > 8)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Out.WriteLine("You do not have enought RAIDA to perform a fix operation.");
+                Console.Out.WriteLine("Check to make sure your internet is working.");
+                Console.Out.WriteLine("Make sure no routers at your work are blocking access to the RAIDA.");
+                Console.Out.WriteLine("Try to Echo RAIDA and see if the status has changed.");
+                Console.ForegroundColor = ConsoleColor.White;
+                return;
+            }
+
+            Console.Out.WriteLine("  Fixing fracked coins can take many minutes.");
                      Console.Out.WriteLine("  If your coins are not completely fixed, fix fracked again.");
                      Stopwatch stopwatch = new Stopwatch();
                      stopwatch.Start();

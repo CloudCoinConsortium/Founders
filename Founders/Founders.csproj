@@ -89,6 +89,7 @@
     <Compile Include="Frack_Fixer.cs" />
     <Compile Include="Importer.cs" />
     <Compile Include="KeyboardReader.cs" />
+    <Compile Include="logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RAIDA.cs" />

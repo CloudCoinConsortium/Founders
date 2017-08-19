@@ -309,7 +309,7 @@ namespace Founders
                 startAn += 32;
             } // end for each AN
             List<string> aoid = new List<string>();
-            string pown = "uuuuuuuuuuuuuuuuuuuuuuuuu";
+            string pown = "uuuuuuuuuuuuuuuuuuuuuuuuu";//Don't trust the incomming jpeg
             string ed = null;//Don't trust the incomming jpeg
             int nn = Convert.ToInt32(wholeString.Substring(902, 2), 16);
             int sn = Convert.ToInt32(wholeString.Substring(904, 6), 16);

@@ -278,8 +278,9 @@ namespace Founders
         {
             DateTime expirationDate = DateTime.Today.AddYears(YEARSTILEXPIRE);
             cc.ed = (expirationDate.Month + "-" + expirationDate.Year);
-          //  Console.WriteLine("ed = " + cc.ed);
-            DateTime zeroDate = DateTime.Parse("8/13/2016 8:33:21 AM");
+            //  Console.WriteLine("ed = " + cc.ed);
+            DateTime zeroDate = new DateTime( 2016, 08, 13);  
+            // DateTime zeroDate = DateTime.Parse("8/13/2016 8:33:21 AM");
             int monthsAfterZero = (int)(expirationDate.Subtract(zeroDate).Days / (365.25 / 12));
             //Turn positive and up to down to floor
           // Console.WriteLine("Months after zero = " + monthsAfterZero);
