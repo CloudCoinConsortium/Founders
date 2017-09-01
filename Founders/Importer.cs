@@ -10,10 +10,12 @@ namespace Founders
     {
         /* INSTANCE VARAIBLES */
         FileUtils fileUtils;
+        
 
         /* CONSTRUCTOR */
         public Importer(FileUtils fileUtils)
         {
+            
             this.fileUtils = fileUtils;
         }//Constructor
 
@@ -38,10 +40,12 @@ namespace Founders
             {
                 //  Console.ForegroundColor = ConsoleColor.Green;
                 //  Console.Out.WriteLine("Importing the following files: ");
+                CoreLogger.Log("Importing the following files: ");
                 //  Console.ForegroundColor = ConsoleColor.White;
                 for (int i = 0; i < fnames.Length; i++)// Loop through each file. 
                 {
                     Console.Out.WriteLine(fnames[i]);
+                    CoreLogger.Log(fnames[i]);
                     this.importOneFile(fnames[i]);
                 } // end for each file name
                 return true;
@@ -70,6 +74,7 @@ namespace Founders
                     {
                         File.Move(this.fileUtils.importFolder + fname, this.fileUtils.trashFolder + fname);
                         Console.Out.WriteLine("File moved to trash: " + fname);
+                        CoreLogger.Log("File moved to trash: " + fname);
                     }
                     else
                     {
@@ -100,6 +105,7 @@ namespace Founders
                 {
                     File.Move(this.fileUtils.importFolder + fname, this.fileUtils.trashFolder + fname);
                     Console.Out.WriteLine("File moved to trash: " + fname);
+                    CoreLogger.Log("File moved to trash: " + fname);
                 }
                 return false;//"Failed to load .stack file");
             }
@@ -123,6 +129,7 @@ namespace Founders
         {
             bool isSuccessful = false;
             // Console.Out.WriteLine("Trying to load: " + this.fileUtils.importFolder + fileName );
+            CoreLogger.Log("Trying to load: " + this.fileUtils.importFolder + fileName);
             try
             {
                 //  Console.Out.WriteLine("Loading coin: " + fileUtils.importFolder + fileName);
@@ -158,16 +165,19 @@ namespace Founders
 
 
                 //   Console.Out.WriteLine("Loaded coin filename: " + tempCoin.fileName);
+                
                 this.fileUtils.writeTo(this.fileUtils.suspectFolder, tempCoin);
                 return true;
             }
             catch (FileNotFoundException ex)
             {
                 Console.Out.WriteLine("File not found: " + fileName + ex);
+                CoreLogger.Log("File not found: " + fileName + ex);
             }
             catch (IOException ioex)
             {
                 Console.Out.WriteLine("IO Exception:" + fileName + ioex);
+                CoreLogger.Log("IO Exception:" + fileName + ioex);
             }// end try catch
             return isSuccessful;
         }
@@ -190,7 +200,9 @@ namespace Founders
                     catch (JsonReaderException e) {
                         //Console.WriteLine("Moving corrupted file to trash: " + fileName);
                         Console.WriteLine("Error reading " + fileName + ". Moving to trash.");
+                        CoreLogger.Log("Error reading " + fileName + ". Moving to trash.");
                         Console.WriteLine(e);
+                        CoreLogger.Log(e.ToString());
                         moveFile(this.fileUtils.importFolder + fileName, this.fileUtils.trashFolder + fileName);
                     }//end catch json error
                 }
@@ -204,6 +216,7 @@ namespace Founders
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Out.WriteLine("  The following file does not appear to be valid JSON. It will be moved to the Trash Folder: ");
                     Console.Out.WriteLine(fileName);
+                    CoreLogger.Log("  The following file does not appear to be valid JSON. It will be moved to the Trash Folder: " + fileName);
                     Console.Out.WriteLine("  Paste the text into http://jsonlint.com/ to check for validity.");
                     Console.ForegroundColor = ConsoleColor.White;
                     return false;//CloudCoin was null so move to trash
@@ -220,10 +233,12 @@ namespace Founders
             catch (FileNotFoundException ex)
             {
                 Console.Out.WriteLine("File not found: " + fileName + ex);
+                CoreLogger.Log("File not found: " + fileName + ex);
             }
             catch (IOException ioex)
             {
                 Console.Out.WriteLine("IO Exception:" + fileName + ioex);
+                CoreLogger.Log("IO Exception:" + fileName + ioex);
             }
 
             // end try catch
@@ -240,6 +255,7 @@ namespace Founders
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Out.WriteLine("The stack file did not have a matching number of { }. There were " + json.Count(f => f == '{') + " {, and " + json.Count(f => f == '}') + " }");
+                CoreLogger.Log("The stack file did not have a matching number of { }. There were " + json.Count(f => f == '{') + " {, and " + json.Count(f => f == '}') + " }");
                 Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }//Check if number of currly brackets open are the same as closed
@@ -247,6 +263,7 @@ namespace Founders
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Out.WriteLine("The stack file did not have a matching number of []. There were " + json.Count(f => f == '[') + " [, and " + json.Count(f => f == ']') + " ]");
+                CoreLogger.Log("The stack file did not have a matching number of []. There were " + json.Count(f => f == '[') + " [, and " + json.Count(f => f == ']') + " ]");
                 Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }//Check if number of  brackets open are the same as closed
@@ -254,6 +271,7 @@ namespace Founders
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Out.WriteLine("The stack file did not have a matching number of double quotations");
+                CoreLogger.Log("The stack file did not have a matching number of double quotations");
                 Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }//Check if number of
@@ -345,6 +363,7 @@ namespace Founders
             catch (Exception e)
             {
                 Console.WriteLine("The process failed: {0}", e.ToString());
+                CoreLogger.Log( e.ToString());
             }
         }
 

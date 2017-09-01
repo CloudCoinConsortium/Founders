@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCLCrypto;
+using System;
 using System.Security.Cryptography;
 
 namespace Founders
@@ -289,28 +290,25 @@ namespace Founders
 
         public String generatePan()
         {
-            using (var provider = new RNGCryptoServiceProvider())
+            byte[] cryptoRandomBuffer = new byte[16];
+            NetFxCrypto.RandomNumberGenerator.GetBytes(cryptoRandomBuffer);
+
+            Guid pan = new Guid(cryptoRandomBuffer);
+            String rawpan = pan.ToString("N");
+            String fullPan = "";
+            switch (rawpan.Length)//Make sure the pan is 32 characters long. The odds of this happening are slim but it will happen.
             {
-                var bytes = new byte[16];
-                provider.GetBytes(bytes);
-
-                Guid pan = new Guid(bytes);
-                String rawpan = pan.ToString("N");
-                String fullPan = "";
-                switch (rawpan.Length)//Make sure the pan is 32 characters long. The odds of this happening are slim but it will happen.
-                {
-                    case 27: fullPan = ("00000" + rawpan); break;
-                    case 28: fullPan = ("0000" + rawpan); break;
-                    case 29: fullPan = ("000" + rawpan); break;
-                    case 30: fullPan = ("00" + rawpan); break;
-                    case 31: fullPan = ("0" + rawpan); break;
-                    case 32: fullPan = rawpan; break;
-                    case 33: fullPan = rawpan.Substring(0, rawpan.Length - 1); break;//trim one off end
-                    case 34: fullPan = rawpan.Substring(0, rawpan.Length - 2); break;//trim one off end
-                }
-
-                return fullPan;
+                case 27: fullPan = ("00000" + rawpan); break;
+                case 28: fullPan = ("0000" + rawpan); break;
+                case 29: fullPan = ("000" + rawpan); break;
+                case 30: fullPan = ("00" + rawpan); break;
+                case 31: fullPan = ("0" + rawpan); break;
+                case 32: fullPan = rawpan; break;
+                case 33: fullPan = rawpan.Substring(0, rawpan.Length - 1); break;//trim one off end
+                case 34: fullPan = rawpan.Substring(0, rawpan.Length - 2); break;//trim one off end
             }
+
+            return fullPan;
         }
 
         public String[] grade()
@@ -474,7 +472,7 @@ namespace Founders
             }// end for 25 ans
         }// end setAnsToPans
 
-        public void setAnsToPansIfPassed()
+        public void setAnsToPansIfPassed(bool partial = false)
         {
             // now set all ans that passed to the new pans
             char[] pownArray = cc.pown.ToCharArray();
@@ -485,7 +483,7 @@ namespace Founders
                 {
                     cc.an[i] = pans[i];
                 }
-                else if (pownArray[i] == 'u' && !RAIDA_Status.failsEcho[i])//Timed out but there server echoed. So it probably changed the PAN just too slow of a response
+                else if (pownArray[i] == 'u' && !RAIDA_Status.failsEcho[i] && partial == false)//Timed out but there server echoed. So it probably changed the PAN just too slow of a response
                 {
                     cc.an[i] = pans[i];
                 }
@@ -507,6 +505,7 @@ namespace Founders
             Console.ForegroundColor = ConsoleColor.White;
             Console.Out.WriteLine("                                                        ");
             Console.Out.WriteLine("   Authenticity Report SN #" + string.Format("{0,8}", cc.sn) + ", Denomination: " + string.Format("{0,3}", this.getDenomination()) + "  ");
+            CoreLogger.Log("   Authenticity Report SN #" + string.Format("{0,8}", cc.sn) + ", Denomination: " + string.Format("{0,3}", this.getDenomination()) + "  ");
             Console.Out.WriteLine("                                                        ");
             Console.Out.Write("    "); a(pownArray[0]); Console.Out.Write("       "); a(pownArray[1]); Console.Out.Write("       "); a(pownArray[2]); Console.Out.Write("       "); a(pownArray[3]); Console.Out.Write("       "); a(pownArray[4]); Console.Out.WriteLine("    ");
             Console.Out.WriteLine("                                                        ");

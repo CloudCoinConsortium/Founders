@@ -7,6 +7,7 @@ namespace Founders
     class Banker
     {
         public FileUtils fileUtils;
+        
         public Banker(FileUtils fileUtils)
         {
             this.fileUtils = fileUtils;

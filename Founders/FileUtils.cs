@@ -23,9 +23,11 @@ namespace Founders
         public String counterfeitFolder;
         public String directoryFolder;
         public String exportFolder;
+        public String partialFolder;
+        
 
         /* CONSTRUCTOR */
-        public FileUtils(String rootFolder, String importFolder, String importedFolder, String trashFolder, String suspectFolder, String frackedFolder, String bankFolder, String templateFolder, String counterfeitFolder, String directoryFolder, String exportFolder)
+        public FileUtils(String rootFolder, String importFolder, String importedFolder, String trashFolder, String suspectFolder, String frackedFolder, String bankFolder, String templateFolder, String counterfeitFolder, String directoryFolder, String exportFolder, String partialFolder)
         {
             //  initialise instance variables
             this.rootFolder = rootFolder;
@@ -39,6 +41,8 @@ namespace Founders
             this.counterfeitFolder = counterfeitFolder;
             this.directoryFolder = directoryFolder;
             this.exportFolder = exportFolder;
+            this.partialFolder = partialFolder;
+            
         }  // End constructor
 
         /* PUBLIC METHODS */
@@ -68,6 +72,7 @@ namespace Founders
             catch (JsonReaderException)
             {
                 Console.WriteLine("There was an error reading files in your bank.");
+                CoreLogger.Log("There was an error reading files in your bank.");
                 Console.WriteLine("You may have the aoid memo bug that uses too many double quote marks.");
                 Console.WriteLine("Your bank files are stored using and older version that did not use properly formed JSON.");
                 Console.WriteLine("Would you like to upgrade these files to the newer standard?");
@@ -82,15 +87,18 @@ namespace Founders
                     for (int i = 0; i < fileNames.Length; i++ )
                     {
                         Console.WriteLine("Fixing " + bankFolder +"\\"+ fileNames[i]);
-                    string text = File.ReadAllText( bankFolder + "\\" + fileNames[i] );
+                        CoreLogger.Log("Fixing " + bankFolder + "\\" + fileNames[i]);
+                        string text = File.ReadAllText( bankFolder + "\\" + fileNames[i] );
                     text = text.Replace("\"aoid\": [\"memo\"=\"\"]", "");
                     File.WriteAllText( bankFolder + "\\" + fileNames[i], text);
 
                     }//End for all files in bank
+                    CoreLogger.Log("Done Fixing. The program will now exit. Please restart. Press any key.");
                     Console.WriteLine("Done Fixing. The program will now exit. Please restart. Press any key.");
                     Console.Read();
                     Environment.Exit(0);
                 } else {
+                    CoreLogger.Log("Leaving files as is. You maybe able to fix the manually by editing the files.");
                     Console.WriteLine("Leaving files as is. You maybe able to fix the manually by editing the files.");
                     Console.WriteLine("Done Fixing. The program will now exit. Please restart. Press any key.");
                     Console.Read();
@@ -120,6 +128,7 @@ namespace Founders
             String wholeString = "";
             byte[] jpegHeader = new byte[455];
             Console.Out.WriteLine("Load file path " + loadFilePath);
+            CoreLogger.Log("Load file path " + loadFilePath);
             FileStream fileStream = new FileStream(loadFilePath, FileMode.Open, FileAccess.Read);
             try
             {
@@ -169,7 +178,9 @@ namespace Founders
             {
                 // Let the user know what went wrong.
                 Console.WriteLine("The file " + jsonfile + " could not be read:");
+                CoreLogger.Log("The file " + jsonfile + " could not be read:");
                 Console.WriteLine(e.Message);
+                CoreLogger.Log(e.Message);
             }
             return jsonData;
         }//end importJSON
@@ -302,6 +313,7 @@ namespace Founders
             string fileName = exportFolder + cu.fileName + tag + ".jpg";
             File.WriteAllBytes(fileName, b1.ToArray());
             Console.Out.WriteLine("Writing to " + fileName);
+            CoreLogger.Log("Writing to " + fileName);
             return fileSavedSuccessfully;
         }//end write JPEG
 
@@ -351,6 +363,7 @@ namespace Founders
                 else
                 {
                     Console.WriteLine(cu.fileName + ".stack" + " already exists in the folder " + folder);
+                    CoreLogger.Log(cu.fileName + ".stack" + " already exists in the folder " + folder);
                     return alreadyExists;
 
                 }//end else

@@ -6,3 +6,24 @@ W:\Code\C# Windows\Founders\Founders\bin\Debug\Newtonsoft.Json.dll
 W:\Code\C# Windows\Founders\Founders\bin\Debug\Newtonsoft.Json.xml
 W:\Code\C# Windows\Founders\Founders\obj\Debug\Founders.exe
 W:\Code\C# Windows\Founders\Founders\obj\Debug\Founders.pdb
+C:\Users\Serg\Documents\Founders-master\Founders\obj\Debug\Founders.csprojResolveAssemblyReference.cache
+C:\Users\Serg\Documents\Founders-master\Founders\obj\Debug\Founders.exe
+C:\Users\Serg\Documents\Founders-master\Founders\obj\Debug\Founders.pdb
+C:\Users\Serg\Documents\Founders-master\Founders\obj\Debug\Founders.csproj.CoreCompileInputs.cache
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\Founders.exe.config
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\Founders.exe
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\Founders.pdb
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PCLCrypto.dll
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PInvoke.BCrypt.dll
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PInvoke.Kernel32.dll
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PInvoke.NCrypt.dll
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PInvoke.Windows.Core.dll
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\Validation.dll
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PCLCrypto.xml
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PInvoke.BCrypt.xml
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PInvoke.Kernel32.xml
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PInvoke.NCrypt.xml
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\PInvoke.Windows.Core.xml
+C:\Users\Serg\Documents\Founders-master\Founders\bin\Debug\Validation.xml

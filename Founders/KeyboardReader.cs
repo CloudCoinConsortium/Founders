@@ -27,10 +27,12 @@ namespace Founders
 
         private string[] errorMessages;
 
+        
+
         public KeyboardReader()
         {
             this.prompt = "> ";
-
+            
         }
 
 
@@ -103,6 +105,8 @@ namespace Founders
                 catch (FormatException e)
                 {
                     Console.Out.WriteLine("Input is not an integer. " + this.errorMessages[INT_MESSAGE]);// "Input is not an integer. ";
+                    CoreLogger.Log("Input is not an integer. " + this.errorMessages[INT_MESSAGE]);
+                    CoreLogger.Log(e.ToString());
                     Console.Out.Write(this.prompt);
                 }
 
@@ -136,6 +140,8 @@ namespace Founders
                 catch (FormatException e)
                 {
                     Console.Out.WriteLine("Input is not an integer. Please enter an integer between " + min + " & " + max);//"Input is not an integer. Please enter an integer between " 
+                    CoreLogger.Log("Input is not an integer. Please enter an integer between " + min + " & " + max);
+                    CoreLogger.Log(e.ToString());
                     Console.Out.Write(this.prompt);
                 }
 
@@ -200,6 +206,7 @@ namespace Founders
             catch (InvalidOperationException e)
             {
                 Console.WriteLine(e);
+                CoreLogger.Log(e.ToString());
                 Console.WriteLine("Fatal error. Exiting program.");// "Fatal error. Exiting program.");
                 return (char)charAsInt;
             }

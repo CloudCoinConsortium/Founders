@@ -12,10 +12,12 @@ namespace Founders
         private int totalValueToFractured;
         private int totalValueToCounterfeit;
         private RAIDA raida;
+        
 
         /* CONSTRUCTORS */
         public Frack_Fixer(FileUtils fileUtils, int timeout)
         {
+            
             this.fileUtils = fileUtils;
             raida = new RAIDA(timeout);
             totalValueToBank = 0;
@@ -33,6 +35,7 @@ namespace Founders
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Out.WriteLine("");
                 Console.Out.WriteLine("RAIDA Fails Echo or Fix. Try again when RAIDA online.");
+                CoreLogger.Log("RAIDA Fails Echo or Fix. Try again when RAIDA online.");
                 Console.Out.WriteLine("");
                 Console.ForegroundColor = ConsoleColor.White;
                 return "RAIDA Fails Echo or Fix. Try again when RAIDA online.";
@@ -64,6 +67,7 @@ namespace Founders
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.Out.WriteLine("");
                             Console.Out.WriteLine("RAIDA" + raida_ID + " unfracked successfully.");
+                            CoreLogger.Log("RAIDA" + raida_ID + " unfracked successfully.");
                             Console.Out.WriteLine("");
                             Console.ForegroundColor = ConsoleColor.White;
                             return "RAIDA" + raida_ID + " unfracked successfully.";
@@ -74,6 +78,7 @@ namespace Founders
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.Out.WriteLine("");
                             Console.Out.WriteLine("RAIDA failed to accept tickets on corner " + corner);
+                            CoreLogger.Log("RAIDA failed to accept tickets on corner " + corner);
                             Console.Out.WriteLine("");
                             Console.ForegroundColor = ConsoleColor.White;
                             return "RAIDA failed to accept tickets on corner " + corner;
@@ -84,6 +89,7 @@ namespace Founders
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Out.WriteLine("");
                         Console.Out.WriteLine("Trusted servers failed to provide tickets for corner " + corner);
+                        CoreLogger.Log("Trusted servers failed to provide tickets for corner " + corner);
                         Console.Out.WriteLine("");
                         Console.ForegroundColor = ConsoleColor.White;
 
@@ -94,6 +100,7 @@ namespace Founders
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Out.WriteLine("");
                 Console.Out.WriteLine("One or more of the trusted triad will not echo and detect.So not trying.");
+                CoreLogger.Log("One or more of the trusted triad will not echo and detect.So not trying.");
                 Console.Out.WriteLine("");
                 Console.ForegroundColor = ConsoleColor.White;
                 return "One or more of the trusted triad will not echo and detect. So not trying.";
@@ -114,6 +121,7 @@ namespace Founders
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Out.WriteLine( "You have no fracked coins.");
+                CoreLogger.Log("You have no fracked coins.");
                 Console.ForegroundColor = ConsoleColor.White;
             }//no coins to unfrack
 
@@ -121,6 +129,7 @@ namespace Founders
             for (int i = 0; i < frackedFileNames.Length; i++)
             {
                 Console.WriteLine("UnFracking coin " + (i + 1) + " of " + frackedFileNames.Length);
+                CoreLogger.Log("UnFracking coin " + (i + 1) + " of " + frackedFileNames.Length);
                 try
                 {
                     frackedCC = fileUtils.loadOneCloudCoinFromJsonFile(this.fileUtils.frackedFolder + frackedFileNames[i]);
@@ -139,18 +148,21 @@ namespace Founders
                             this.fileUtils.overWrite(this.fileUtils.bankFolder, fixedCC.cc);
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
                             Console.WriteLine("CloudCoin was moved to Bank.");
+                            CoreLogger.Log("CloudCoin was moved to Bank.");
                             break;
                         case "counterfeit":
                             this.totalValueToCounterfeit++;
                             this.fileUtils.overWrite(this.fileUtils.counterfeitFolder, fixedCC.cc);
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
                             Console.WriteLine("CloudCoin was moved to Trash.");
+                            CoreLogger.Log("CloudCoin was moved to Trash.");
                             break;
                         default://Move back to fracked folder
                             this.totalValueToFractured++;
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
                             this.fileUtils.overWrite(this.fileUtils.frackedFolder, fixedCC.cc);
                             Console.WriteLine("CloudCoin was moved back to Fraked folder.");
+                            CoreLogger.Log("CloudCoin was moved back to Fraked folder.");
                             break;
                     }
                     // end switch on the place the coin will go 
@@ -161,12 +173,14 @@ namespace Founders
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(ex);
+                    CoreLogger.Log(ex.ToString());
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 catch (IOException ioex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(ioex);
+                    CoreLogger.Log(ioex.ToString());
                     Console.ForegroundColor = ConsoleColor.White;
                 } // end try catch
             }// end for each file name that is fracked
@@ -190,6 +204,7 @@ namespace Founders
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                CoreLogger.Log(e.ToString());
             }
             return deleted;
         }//end delete coin
@@ -224,6 +239,7 @@ namespace Founders
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.Out.WriteLine("");
                     Console.WriteLine("Attempting to fix RAIDA " + raida_ID);
+                    CoreLogger.Log("Attempting to fix RAIDA " + raida_ID);
                     Console.Out.WriteLine("");
                     Console.ForegroundColor = ConsoleColor.White;
 
@@ -234,6 +250,48 @@ namespace Founders
                     while (!fixer.finnished)
                     {
                         Console.WriteLine(" Using corner " + corner);
+                        CoreLogger.Log(" Using corner " + corner);
+                        fix_result = fixOneGuidCorner(raida_ID, brokeCoin, corner, fixer.currentTriad);
+                        // Console.WriteLine(" fix_result: " + fix_result + " for corner " + corner);
+                        if (fix_result.Contains("success"))
+                        {
+                            //Fixed. Do the fixed stuff
+                            cu.setPastStatus("pass", raida_ID);
+                            fixer.finnished = true;
+                            corner = 1;
+                        }
+                        else
+                        {
+                            //Still broken, do the broken stuff. 
+                            corner++;
+                            fixer.setCornerToCheck(corner);
+                        }
+                    }//End whild fixer not finnished
+                }//end if RAIDA past status is passed and does not need to be fixed
+            }//end for each AN
+
+            for (int raida_ID = 24; raida_ID > 0; raida_ID--)
+            {
+                //  Console.WriteLine("Past Status for " + raida_ID + ", " + brokeCoin.pastStatus[raida_ID]);
+
+                if (cu.getPastStatus(raida_ID).ToLower() != "pass")//will try to fix everything that is not perfect pass.
+                {
+
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Out.WriteLine("");
+                    Console.WriteLine("Attempting to fix RAIDA " + raida_ID);
+                    CoreLogger.Log("Attempting to fix RAIDA " + raida_ID);
+                    Console.Out.WriteLine("");
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                    fixer = new FixitHelper(raida_ID, brokeCoin.an.ToArray());
+
+                    //trustedServerAns = new String[] { brokeCoin.ans[fixer.currentTriad[0]], brokeCoin.ans[fixer.currentTriad[1]], brokeCoin.ans[fixer.currentTriad[2]] };
+                    corner = 1;
+                    while (!fixer.finnished)
+                    {
+                        Console.WriteLine(" Using corner " + corner);
+                        CoreLogger.Log(" Using corner " + corner);
                         fix_result = fixOneGuidCorner(raida_ID, brokeCoin, corner, fixer.currentTriad);
                         // Console.WriteLine(" fix_result: " + fix_result + " for corner " + corner);
                         if (fix_result.Contains("success"))
@@ -255,6 +313,7 @@ namespace Founders
             DateTime after = DateTime.Now;
             TimeSpan ts = after.Subtract(before);
             Console.WriteLine("Time spent fixing RAIDA in milliseconds: " + ts.Milliseconds);
+            CoreLogger.Log("Time spent fixing RAIDA in milliseconds: " + ts.Milliseconds);
 
             cu.calculateHP();//how many fails did it get
           //  cu.gradeCoin();// sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost

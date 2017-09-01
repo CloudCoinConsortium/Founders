@@ -9,9 +9,11 @@ namespace Founders
     {
         FileUtils fileUtils;
         Random random;
+        
 
         public Dumper(FileUtils fileUtils)
         {
+            
             this.fileUtils = fileUtils;
             random = new Random();
         }//end Dumper constructor
@@ -46,10 +48,12 @@ namespace Founders
             String[] coinsToDelete = new String[coinCount];
             String[] bankedFileNames = new DirectoryInfo(this.fileUtils.bankFolder).GetFiles().Select(o => o.Name).ToArray();//Get all names in bank folder
             String[] frackedFileNames = new DirectoryInfo(this.fileUtils.frackedFolder).GetFiles().Select(o => o.Name).ToArray(); ;
+            String[] partialFileNames = new DirectoryInfo(this.fileUtils.partialFolder).GetFiles().Select(o => o.Name).ToArray();
             // Add the two arrays together
             var list = new List<String>();
             list.AddRange(bankedFileNames);
             list.AddRange(frackedFileNames);
+            list.AddRange(partialFileNames);
 
             // Program will spend fracked files like perfect files
             bankedFileNames = list.ToArray();
@@ -66,6 +70,7 @@ namespace Founders
 
             String bankFileName;
             String frackedFileName;
+            String partialFileName;
             string denomination;
 
             // Put all the JSON together and add header and footer
@@ -75,6 +80,7 @@ namespace Founders
                 denomination = bankedFileNames[i].Split('.')[0];
                 bankFileName = this.fileUtils.bankFolder + bankedFileNames[i];//File name in bank folder
                 frackedFileName = this.fileUtils.frackedFolder + bankedFileNames[i];//File name in fracked folder
+                partialFileName = this.fileUtils.partialFolder + bankedFileNames[i];
                 if (denomination == "1" && m1 > 0)
                 {
                     if (c != 0)//This is the json seperator between each coin. It is not needed on the first coin
@@ -92,6 +98,21 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." + random.Next(100000, 10000000) + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
+                        coinsToDelete[c] = bankFileName;
+                        c++;
+                    }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = this.fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CoinUtils cu = new CoinUtils(coinNote);
+                        coinNote.aoid = null;//Clear all owner data
+                        coinNote.pown = "uuuuuuuuuuuuuuuuuuuuuuuuu";
+                        json = start + this.fileUtils.setJSON(coinNote) + end;
+                        filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." + random.Next(100000, 10000000) + ".stack";
+                        File.WriteAllText(filename, json);
+                        Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = bankFileName;
                         c++;
                     }
@@ -105,6 +126,7 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." + random.Next(100000, 10000000) + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = frackedFileName;
                         c++;
                     }
@@ -130,6 +152,21 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." +  random.Next(100000, 10000000)  + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
+                        coinsToDelete[c] = bankFileName;
+                        c++;
+                    }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = this.fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CoinUtils cu = new CoinUtils(coinNote);
+                        coinNote.aoid = null;//Clear all owner data
+                        coinNote.pown = "uuuuuuuuuuuuuuuuuuuuuuuuu";
+                        json = start + this.fileUtils.setJSON(coinNote) + end;
+                        filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." + random.Next(100000, 10000000) + ".stack";
+                        File.WriteAllText(filename, json);
+                        Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = bankFileName;
                         c++;
                     }
@@ -143,6 +180,7 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." +  random.Next(100000, 10000000)  + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = frackedFileName;
                         c++;
                     }
@@ -167,6 +205,21 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." +  random.Next(100000, 10000000)  + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
+                        coinsToDelete[c] = bankFileName;
+                        c++;
+                    }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = this.fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CoinUtils cu = new CoinUtils(coinNote);
+                        coinNote.aoid = null;//Clear all owner data
+                        coinNote.pown = "uuuuuuuuuuuuuuuuuuuuuuuuu";
+                        json = start + this.fileUtils.setJSON(coinNote) + end;
+                        filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." + random.Next(100000, 10000000) + ".stack";
+                        File.WriteAllText(filename, json);
+                        Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = bankFileName;
                         c++;
                     }
@@ -180,6 +233,7 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." +  random.Next(100000, 10000000)  + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = frackedFileName;
                         c++;
                     }
@@ -204,6 +258,21 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." +  random.Next(100000, 10000000)  + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
+                        coinsToDelete[c] = bankFileName;
+                        c++;
+                    }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = this.fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CoinUtils cu = new CoinUtils(coinNote);
+                        coinNote.aoid = null;//Clear all owner data
+                        coinNote.pown = "uuuuuuuuuuuuuuuuuuuuuuuuu";
+                        json = start + this.fileUtils.setJSON(coinNote) + end;
+                        filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." + random.Next(100000, 10000000) + ".stack";
+                        File.WriteAllText(filename, json);
+                        Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = bankFileName;
                         c++;
                     }
@@ -217,6 +286,7 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." +  random.Next(100000, 10000000)  + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = frackedFileName;
                         c++;
                     }
@@ -241,6 +311,21 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." +  random.Next(100000, 10000000)  + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
+                        coinsToDelete[c] = bankFileName;
+                        c++;
+                    }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = this.fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CoinUtils cu = new CoinUtils(coinNote);
+                        coinNote.aoid = null;//Clear all owner data
+                        coinNote.pown = "uuuuuuuuuuuuuuuuuuuuuuuuu";
+                        json = start + this.fileUtils.setJSON(coinNote) + end;
+                        filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." + random.Next(100000, 10000000) + ".stack";
+                        File.WriteAllText(filename, json);
+                        Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = bankFileName;
                         c++;
                     }
@@ -254,6 +339,7 @@ namespace Founders
                         filename = this.fileUtils.exportFolder + Path.DirectorySeparatorChar + cu.getDenomination() + ".CloudCoins." +  random.Next(100000, 10000000)  + ".stack";
                         File.WriteAllText(filename, json);
                         Console.Out.WriteLine("Writing to " + filename);
+                        CoreLogger.Log("Writing to " + filename);
                         coinsToDelete[c] = frackedFileName;
                         c++;
                     }

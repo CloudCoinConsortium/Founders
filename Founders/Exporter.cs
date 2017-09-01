@@ -10,10 +10,12 @@ namespace Founders
     {
         /* INSTANCE VARIABLES */
         FileUtils fileUtils;
+        
 
         /* CONSTRUCTOR */
         public Exporter(FileUtils fileUtils)
         {
+            
             this.fileUtils = fileUtils;
         }
 
@@ -25,10 +27,12 @@ namespace Founders
             String[] coinsToDelete = new String[coinCount];
             String[] bankedFileNames = new DirectoryInfo(this.fileUtils.bankFolder).GetFiles().Select(o => o.Name).ToArray(); // list all file names with bank extension
             String[] frackedFileNames = new DirectoryInfo(this.fileUtils.frackedFolder).GetFiles().Select(o => o.Name).ToArray(); // list all file names with bank extension
+            String[] partialFileNames = new DirectoryInfo(this.fileUtils.partialFolder).GetFiles().Select(o => o.Name).ToArray();
 
             var list = new List<string>();
             list.AddRange(bankedFileNames);
             list.AddRange(frackedFileNames);
+            list.AddRange(partialFileNames);
 
             bankedFileNames = list.ToArray(); // Add the two arrays together
 
@@ -39,6 +43,7 @@ namespace Founders
             {
                 String bankFileName = (this.fileUtils.bankFolder + bankedFileNames[i]);
                 String frackedFileName = (this.fileUtils.frackedFolder + bankedFileNames[i]);
+                String partialFileName = (this.fileUtils.partialFolder + bankedFileNames[i]);
 
                 // Get denominiation
                 String denomination = bankedFileNames[i].Split('.')[0];
@@ -49,34 +54,34 @@ namespace Founders
                         case "1":
                             if (m1 > 0)
                             {
-                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m1--;
+                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName, partialFileName); m1--;
                             }
                             break;
                         case "5":
                             if (m5 > 0)
                             {
 
-                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m5--;
+                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName, partialFileName); m5--;
                             }
                             break;
                         case "25":
                             if (m25 > 0)
                             {
 
-                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m25--;
+                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName, partialFileName); m25--;
                             }
                             break;
 
                         case "100":
                             if (m100 > 0)
                             {
-                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m100--;
+                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName, partialFileName); m100--;
                             }
                             break;
 
                         case "250":
                             if (m250 > 0)
-                            { this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m250--; }
+                            { this.jpegWriteOne(path, tag, bankFileName, frackedFileName, partialFileName); m250--; }
                             break;
                     }//end switch
 
@@ -88,10 +93,12 @@ namespace Founders
                 catch (FileNotFoundException ex)
                 {
                     Console.Out.WriteLine(ex);
+                    CoreLogger.Log(ex.ToString());
                 }
                 catch (IOException ioex)
                 {
                     Console.Out.WriteLine(ioex);
+                    CoreLogger.Log(ioex.ToString());
                 }//end catch 
             }// for each 1 note  
         }//end write all jpegs
@@ -106,10 +113,12 @@ namespace Founders
             String[] coinsToDelete = new String[coinCount];
             String[] bankedFileNames = new DirectoryInfo(this.fileUtils.bankFolder).GetFiles().Select(o => o.Name).ToArray();//Get all names in bank folder
             String[] frackedFileNames = new DirectoryInfo(this.fileUtils.frackedFolder).GetFiles().Select(o => o.Name).ToArray(); ;
+            String[] partialFileNames = new DirectoryInfo(this.fileUtils.partialFolder).GetFiles().Select(o => o.Name).ToArray();
             // Add the two arrays together
             var list = new List<String>();
             list.AddRange(bankedFileNames);
             list.AddRange(frackedFileNames);
+            list.AddRange(partialFileNames);
 
             // Program will spend fracked files like perfect files
             bankedFileNames = list.ToArray();
@@ -123,6 +132,7 @@ namespace Founders
             json = json + "\t[" + Environment.NewLine;
             String bankFileName;
             String frackedFileName;
+            String partialFileName;
             string denomination;
 
             // Put all the JSON together and add header and footer
@@ -131,6 +141,7 @@ namespace Founders
                 denomination = bankedFileNames[i].Split('.')[0];
                 bankFileName = this.fileUtils.bankFolder + bankedFileNames[i];//File name in bank folder
                 frackedFileName = this.fileUtils.frackedFolder + bankedFileNames[i];//File name in fracked folder
+                partialFileName = this.fileUtils.partialFolder + bankedFileNames[i];
                 if (denomination == "1" && m1 > 0)
                 {
                     if (c != 0)//This is the json seperator between each coin. It is not needed on the first coin
@@ -144,6 +155,14 @@ namespace Founders
                         coinNote.aoid = null;//Clear all owner data
                         json = json + fileUtils.setJSON(coinNote);
                         coinsToDelete[c] = bankFileName;
+                        c++;
+                    }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        coinNote.aoid = null;//Clear all owner data
+                        json = json + fileUtils.setJSON(coinNote);
+                        coinsToDelete[c] = partialFileName;
                         c++;
                     }
                     else
@@ -174,6 +193,14 @@ namespace Founders
                         coinsToDelete[c] = bankFileName;
                         c++;
                     }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        coinNote.aoid = null;//Clear all owner data
+                        json = json + fileUtils.setJSON(coinNote);
+                        coinsToDelete[c] = partialFileName;
+                        c++;
+                    }
                     else
                     {
                         CloudCoin coinNote = this.fileUtils.loadOneCloudCoinFromJsonFile(frackedFileName);
@@ -199,6 +226,14 @@ namespace Founders
                         coinNote.aoid = null;//Clear all owner data
                         json = json + this.fileUtils.setJSON(coinNote);
                         coinsToDelete[c] = bankFileName;
+                        c++;
+                    }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        coinNote.aoid = null;//Clear all owner data
+                        json = json + fileUtils.setJSON(coinNote);
+                        coinsToDelete[c] = partialFileName;
                         c++;
                     }
                     else
@@ -228,6 +263,14 @@ namespace Founders
                         coinsToDelete[c] = bankFileName;
                         c++;
                     }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        coinNote.aoid = null;//Clear all owner data
+                        json = json + fileUtils.setJSON(coinNote);
+                        coinsToDelete[c] = partialFileName;
+                        c++;
+                    }
                     else
                     {
                         CloudCoin coinNote = this.fileUtils.loadOneCloudCoinFromJsonFile(frackedFileName);
@@ -253,6 +296,14 @@ namespace Founders
                         coinNote.aoid = null;//Clear all owner data
                         json = json + this.fileUtils.setJSON(coinNote);
                         coinsToDelete[c] = bankFileName;
+                        c++;
+                    }
+                    else if (File.Exists(partialFileName)) // Is it a partial file 
+                    {
+                        CloudCoin coinNote = fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                        coinNote.aoid = null;//Clear all owner data
+                        json = json + fileUtils.setJSON(coinNote);
+                        coinsToDelete[c] = partialFileName;
                         c++;
                     }
                     else
@@ -287,6 +338,7 @@ namespace Founders
 
             File.WriteAllText(filename, json);
             Console.Out.WriteLine("Writing to : ");
+            CoreLogger.Log("Writing to : " + filename);
             Console.Out.WriteLine(filename);
             /*DELETE FILES THAT HAVE BEEN EXPORTED*/
             for (int cc = 0; cc < coinsToDelete.Length; cc++)
@@ -301,7 +353,7 @@ namespace Founders
 
 
         /* PRIVATE METHODS */
-        private void jpegWriteOne(String path, String tag, String bankFileName, String frackedFileName)
+        private void jpegWriteOne(String path, String tag, String bankFileName, String frackedFileName, String partialFileName)
         {
             if (File.Exists(bankFileName))//If the file is a bank file, export a good bank coin
             {
@@ -309,6 +361,14 @@ namespace Founders
                 if (this.fileUtils.writeJpeg(jpgCoin, tag))//If the jpeg writes successfully 
                 {
                     File.Delete(bankFileName);//Delete the files if they have been written to
+                }//end if write was good. 
+            }
+            else if (File.Exists(partialFileName))//If the file is a bank file, export a good bank coin
+            {
+                CloudCoin jpgCoin = this.fileUtils.loadOneCloudCoinFromJsonFile(partialFileName);
+                if (this.fileUtils.writeJpeg(jpgCoin, tag))//If the jpeg writes successfully 
+                {
+                    File.Delete(partialFileName);//Delete the files if they have been written to
                 }//end if write was good. 
             }
             else//Export a fracked coin. 

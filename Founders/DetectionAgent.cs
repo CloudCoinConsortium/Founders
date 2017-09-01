@@ -10,6 +10,7 @@ namespace Founders
         public int readTimeout;
         public int RAIDANumber;
         public String fullUrl;
+        
 
         /**
         * DetectionAgent Constructor
@@ -19,6 +20,7 @@ namespace Founders
         */
         public DetectionAgent(int RAIDANumber, int readTimeout)
         {
+            
             this.RAIDANumber = RAIDANumber;
             this.fullUrl = "https://RAIDA" + RAIDANumber + ".cloudcoin.global/service/";
             this.readTimeout = readTimeout;
@@ -56,12 +58,14 @@ namespace Founders
                 echoResponse.outcome = "error";
                 echoResponse.success = false;
                 RAIDA_Status.failsEcho[raidaID] = true;
+                if(ex.InnerException != null)
                 echoResponse.fullResponse = ex.InnerException.Message;
             }
             DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
             echoResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
             RAIDA_Status.echoTime[raidaID] = Convert.ToInt32(ts.Milliseconds);
             //Console.WriteLine("RAIDA # " + raidaID + RAIDA_Status.failsEcho[raidaID]);
+            
             return echoResponse;
         }//end detect
 
@@ -226,6 +230,7 @@ namespace Founders
         private String getHtml(String urlAddress)
         {
             //Console.Out.WriteLine(urlAddress);
+            
             // Console.Out.Write(".");
             string data = "";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
@@ -250,6 +255,7 @@ namespace Founders
                     }
                     data = readStream.ReadToEnd();
                    // System.Console.Out.WriteLine(data);
+                   
                     response.Close();
                     readStream.Close();
                 }
@@ -257,6 +263,7 @@ namespace Founders
             catch (Exception ex)
             {
                 // Console.Out.WriteLine(ex.Message);
+                
                 return ex.Message;
             }
             // Console.Out.WriteLine(data);
